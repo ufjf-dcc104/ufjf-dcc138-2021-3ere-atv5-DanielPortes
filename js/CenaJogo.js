@@ -3,26 +3,32 @@ import Mapa from "./Mapa.js";
 import modeloMapa1 from "../maps/mapa1.js";
 import Sprite from "./Sprite.js";
 
-export default class CenaJogo extends Cena
-{
-    quandoColidir(a, b)
-    {
-        if (!this.aRemover.includes(a))
-        {
+export default class CenaJogo extends Cena {
+    quandoColidir(a, b) {
+        if (!this.aRemover.includes(a)) {
             this.aRemover.push(a);
+            if (this.enemies.includes(a)) {
+                const idx = this.enemies.indexOf(a);
+                this.enemies.splice(idx, 1);
+            }
         }
-        if (!this.aRemover.includes(b))
-        {
+        if (!this.aRemover.includes(b)) {
             this.aRemover.push(b);
+            if (this.enemies.includes(b)) {
+                const idx = this.enemies.indexOf(b);
+                this.enemies.splice(idx, 1);
+            }
+
         }
-        if (a.tags.has("pc") && b.tags.has("enemy"))
-        {
+        if (a.tags.has("pc") && b.tags.has("enemy")) {
+            this.game.selecionaCena("fim");
+        }
+        if (this.enemies.length === 0) {
             this.game.selecionaCena("fim");
         }
     }
 
-    preparar()
-    {
+    preparar() {
         super.preparar();
 
         const mapa1 = new Mapa(22, 20, 32);
@@ -32,20 +38,15 @@ export default class CenaJogo extends Cena
         const pc = new Sprite({x: 300, y: 600, vx: 1000});
         pc.tags.add("pc");
         const cena = this;
-        pc.controlar = function (dt)
-        {
-            if (cena.input.comandos.get("MOVE_ESQUERDA"))
-            {
+        pc.controlar = function (dt) {
+            if (cena.input.comandos.get("MOVE_ESQUERDA")) {
                 this.vx = -200;
-            } else if (cena.input.comandos.get("MOVE_DIREITA"))
-            {
+            } else if (cena.input.comandos.get("MOVE_DIREITA")) {
                 this.vx = +200;
-            } else
-            {
+            } else {
                 this.vx = 0;
             }
-            if (cena.input.comandos.get("ATIRA"))
-            {
+            if (cena.input.comandos.get("ATIRA")) {
                 this.atirar(this.x, this.y);
                 cena.input.comandos.set("ATIRA", false);
             }
@@ -53,14 +54,14 @@ export default class CenaJogo extends Cena
         };
         this.adicionar(pc);
 
-
-        for (let i = 2; i < 10; i++)
-        {
-            for (let j = 2; j < 10; j++)
-            {
-                this.adicionar(new Sprite({
-                    x: (j * 64), y: (i * 32), vx: 100, color: "red", tags: ["enemy"],
-                }));
+        this.enemies = [];
+        for (let i = 2; i < 10; i++) {
+            for (let j = 2; j < 10; j++) {
+                const enemy = new Sprite({
+                    x: (j * 64), y: (i * 32), vx: 100, vy: 15, color: "red", tags: ["enemy"],
+                });
+                this.adicionar(enemy);
+                this.enemies.push(enemy);
             }
         }
 
