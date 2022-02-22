@@ -19,7 +19,8 @@ assets.carregaImagem("eye", "assets/eye.png");
 assets.carregaImagem("wall", "assets/wall.png");
 assets.carregaImagem("wall2", "assets/wall2.png");
 assets.carregaImagem("glass", "assets/glass.png");
-
+assets.carregaImagem("skull", "assets/skull.png");
+assets.carregaImagem("doguinho", "assets/doguinho.png");
 assets.carregaAudio("moeda", "assets/coin.wav");
 assets.carregaAudio("colision", "assets/colision.wav");
 assets.carregaAudio("boom", "assets/boom.wav");
